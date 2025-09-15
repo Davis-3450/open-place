@@ -24,31 +24,30 @@ class Data(BaseModel):
     canvas: list[Pixel] = []
     settings: Settings
 
-    def save(self, path: str):
-        with open(path, "w") as f:
-            f.write(self.model_dump_json())
-
 
 class CanvasFile(BaseModel):
     data: Data
+
+    def save(self, path: str | Path):
+        Path(path).write_text(self.model_dump_json(indent=2), encoding="utf-8")
 
 
 class Canvas:
     def __init__(self, path: str):
         self.path = Path(path)
-        self.data = self._load()
+        self.file = self._load()
 
     def save(self):
-        self.data.save(self.path)
+        self.file.save(self.path)
 
     def add_pixel(self, pixel: Pixel):
-        self.data.canvas.append(pixel)
+        self.file.data.canvas.append(pixel)
 
     def render(self, out_path: str = "canvas.png", scale: int = 8):
-        w, h = self.data.settings.width, self.data.settings.height
+        w, h = self.file.data.settings.width, self.file.data.settings.height
         img = Image.new("RGB", (w, h), (255, 255, 255))
 
-        for px in self.data.canvas:
+        for px in self.file.data.canvas:
             if 0 <= px.x < w and 0 <= px.y < h:
                 color = tuple(int(px.color[i : i + 2], 16) for i in (1, 3, 5))
                 img.putpixel((px.x, px.y), color)
@@ -62,7 +61,6 @@ class Canvas:
     def validate(self):
         pass
 
-    def _load(self) -> Data:
+    def _load(self) -> CanvasFile:
         text = self.path.read_text(encoding="utf-8")
-        cf = CanvasFile.model_validate_json(text)
-        return cf.data
+        return CanvasFile.model_validate_json(text)
