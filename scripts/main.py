@@ -16,17 +16,38 @@ def draw(color: str, x: int, y: int):
 
 @app.command()
 def process_string(text: str):
-    """string input "/set x y color"
-
-    Args:
-        text (str): string input
     """
-    for line in text.split("\n"):
-        if line.startswith("/set"):
-            x, y, color = line.split(" ")[1:]
-            c.add_pixel(Pixel(x=int(x), y=int(y), color=color))
-    else:
-        print("Invalid command")
+    Procesa input estilo: "/set x y color"
+    Ejemplo:
+        /set 10 5 #ff0000
+    """
+    lines = text.strip().split("\n")
+    success, failed = 0, 0
+
+    for line in lines:
+        if not line.startswith("/set"):
+            print(f"❌ Invalid command: {line}")
+            failed += 1
+            continue
+
+        parts = line.split()
+        if len(parts) != 4:
+            print(f"❌ Wrong format: {line}")
+            failed += 1
+            continue
+
+        _, x_str, y_str, color = parts
+        try:
+            pixel = Pixel(x=int(x_str), y=int(y_str), color=color)
+            c.add_pixel(pixel)
+            print(f"✅ Added pixel {pixel}")
+            success += 1
+        except Exception as e:
+            print(f"❌ Error parsing {line}: {e}")
+            failed += 1
+    c.save()
+
+    typer.echo(f"Finished. Success: {success}, Failed: {failed}")
 
 
 @app.command()
