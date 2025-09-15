@@ -50,10 +50,12 @@ jobs:
 
       - name: Create issue comment
         uses: peter-evans/create-or-update-comment@v4
+
+        if: steps.add_commit.outputs.committed == 'true'
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            Thanks @${{ github.event.issue.user.login }}! Success, see changes! : [here](${{env.CANVAS_URL}})
+            Thanks @${{ github.event.issue.user.login }}! Success, see changes! : ![Canvas](${{ env.RENDER_URL }})
           reactions: eyes
 
       - name: Close issue
