@@ -1,5 +1,14 @@
 # open-place
 
-This is a github based canvas!
+This is a github based canvas, you can make pixels by creating issues!
 
 ![alt](data/rendered.png)
+
+## Usage
+* Create an issue with the following title format:
+`/set <x> <y> <color>`
+Example:
+`/set 12 5 #ff1201`
+This will set the pixel at (12,5) to the color #ff1201 (red). 
+* body can be empty.
+
