@@ -1,3 +1,6 @@
+from pathlib import Path
+
+from PIL import Image
 from pydantic import BaseModel, Field
 
 # from pydantic_extra_types.color
@@ -40,3 +43,26 @@ class Canvas:
 
     def add_pixel(self, pixel: Pixel):
         self.data.canvas.append(pixel)
+
+    def render(self, out_path: str = "canvas.png", scale: int = 8):
+        w, h = self.data.settings.width, self.data.settings.height
+        img = Image.new("RGB", (w, h), (255, 255, 255))
+
+        for px in self.data.canvas:
+            if 0 <= px.x < w and 0 <= px.y < h:
+                color = tuple(int(px.color[i : i + 2], 16) for i in (1, 3, 5))
+                img.putpixel((px.x, px.y), color)
+
+        if scale > 1:
+            img = img.resize((w * scale, h * scale), Image.NEAREST)
+
+        img.save(out_path)
+        print(f"successfully rendered {out_path} ({w}x{h}, scale {scale} x)")
+
+    def validate(self):
+        pass
+
+    def _load(self) -> Data:
+        text = self.path.read_text(encoding="utf-8")
+        cf = CanvasFile.model_validate_json(text)
+        return cf.data
