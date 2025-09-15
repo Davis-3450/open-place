@@ -46,6 +46,7 @@ jobs:
           author_email: ${{ github.repository_owner }}@users.noreply.github.com
           message: "Render issue ${{ github.event.issue.title }}"
           push: true
+
       - name: Create issue comment
         uses: peter-evans/create-or-update-comment@v4
         if: steps.add_commit.outputs.committed == 'true'
