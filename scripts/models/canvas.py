@@ -13,3 +13,16 @@ class Pixel(BaseModel):
 class Settings(BaseModel):
     width: int = Field(ge=0)
     height: int = Field(ge=0)
+
+
+class Data(BaseModel):
+    """Canvas model"""
+
+    canvas: list[Pixel] = []
+    settings: Settings
+
+    def save(self, path: str):
+        with open(path, "w") as f:
+            f.write(self.model_dump_json())
+
+
