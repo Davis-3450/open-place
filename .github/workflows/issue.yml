@@ -2,7 +2,7 @@ name: Issue monitor
 
 on:
   issues:
-    types: [opened, edited, closed]
+    types: [opened, edited]
 
 jobs:
   process:
@@ -17,11 +17,24 @@ jobs:
 
       - run: uv sync --frozen
 
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Install Python 3.13
+        run: uv python install 3.13
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
       - name: Process command
         run: |
-          python scripts/main.py process-string "${{ github.event.issue.title }}"
-          python scripts/main.py validate
-          python scripts/main.py render
+          uv run scripts/main.py process-string "${{ github.event.issue.title }}"
+          uv run scripts/main.py render
           echo "Render done"
 
       - name: commit render
