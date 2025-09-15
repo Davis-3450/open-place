@@ -11,12 +11,6 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: astral-sh/setup-uv@v3
-
-      - run: uv sync --frozen
-
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
@@ -32,13 +26,23 @@ jobs:
         run: uv sync --frozen
 
       - name: Process command
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
         run: |
-          uv run scripts/main.py process-string "${{ github.event.issue.title }}"
+          uv run scripts/main.py process-string "${ISSUE_TITLE}"
           uv run scripts/main.py render
           echo "Render done"
 
       - name: commit render
-        run: |
-          git add data/rendered.png
-          git commit -m "Render issue ${{ github.event.issue.title }}"
-          git push
+        id: add_commit
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: |
+            data/rendered.png
+            data/canvas.json
+          author_name: ${{ github.repository_owner }}
+          author_email: ${{ github.repository_owner }}@users.noreply.github.com
+          message: "Render issue ${{ github.event.issue.title }}"
+          push: true
