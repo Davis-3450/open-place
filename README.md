@@ -1,2 +1,2 @@
 # open-place
-a github based canvas!
+This is a github based canvas!
