@@ -1,0 +1,31 @@
+name: Issue monitor
+
+on:
+  issues:
+    types: [opened, edited, closed]
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+
+      - run: uv sync --frozen
+
+      - name: Process command
+        run: |
+          python scripts/main.py process-string "${{ github.event.issue.title }}"
+          python scripts/main.py validate
+          python scripts/main.py render
+          echo "Render done"
+
+      - name: commit render
+        run: |
+          git add data/rendered.png
+          git commit -m "Render issue ${{ github.event.issue.title }}"
+          git push
