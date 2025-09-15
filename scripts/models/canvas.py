@@ -26,3 +26,17 @@ class Data(BaseModel):
             f.write(self.model_dump_json())
 
 
+class CanvasFile(BaseModel):
+    data: Data
+
+
+class Canvas:
+    def __init__(self, path: str):
+        self.path = Path(path)
+        self.data = self._load()
+
+    def save(self):
+        self.data.save(self.path)
+
+    def add_pixel(self, pixel: Pixel):
+        self.data.canvas.append(pixel)
