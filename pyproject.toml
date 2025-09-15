@@ -1,0 +1,7 @@
+[project]
+name = "open-place"
+version = "0.1.0"
+description = "A github based canvas"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = ["pillow>=11.3.0", "pydantic>=2.11.9", "typer>=0.17.4"]
