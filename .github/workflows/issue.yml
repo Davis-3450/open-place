@@ -53,7 +53,7 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            Thanks @${{ github.event.issue.user.login }}! Success, see changes!
+            Thanks @${{ github.event.issue.user.login }}! Success, see changes! : [here](${{env.CANVAS_URL}})
           reactions: eyes
 
       - name: Close issue
