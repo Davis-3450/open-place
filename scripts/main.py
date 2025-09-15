@@ -12,7 +12,21 @@ app = typer.Typer()
 @app.command()
 def draw(color: str, x: int, y: int):
     c.add_pixel(Pixel(x=x, y=y, color=color))
-    c.save()
+
+
+@app.command()
+def process_string(text: str):
+    """string input "/set x y color"
+
+    Args:
+        text (str): string input
+    """
+    for line in text.split("\n"):
+        if line.startswith("/set"):
+            x, y, color = line.split(" ")[1:]
+            c.add_pixel(Pixel(x=int(x), y=int(y), color=color))
+    else:
+        print("Invalid command")
 
 
 @app.command()
