@@ -16,7 +16,8 @@ This will set the pixel at (12,5) to the color #ff1201 (red).
 - [ ] A cron or trigger job to reset the canvas
 - [ ] Grid with numbers
 - [ ] Web interface with a better renderer
-- [ ] Prevent worker colisions (for lack of a better word)
+- [ ] Prevent worker colisions (for lack of a better word
+- [ ] replace hex values for a predefined palette (colors)
 
 ## Contributing
 ...
