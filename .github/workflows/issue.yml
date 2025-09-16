@@ -50,6 +50,7 @@ jobs:
           author_name: ${{ github.repository_owner }}
           author_email: ${{ github.repository_owner }}@users.noreply.github.com
           message: "Render issue ${{ github.event.issue.title }}"
+          pull: --rebase --autostash
           push: true
 
       - name: Create issue comment
