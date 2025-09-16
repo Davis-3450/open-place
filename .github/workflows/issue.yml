@@ -5,8 +5,8 @@ on:
     types: [opened, edited]
 
 concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: false
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.issue.number }}
+  cancel-in-progress: true
 
 jobs:
   process:
